@@ -120,6 +120,10 @@ cd SonicTheHedgehog2Recomp
 # (cloned without --recursive? run: git submodule update --init --recursive)
 ```
 
+`Skipping submodule 'clownmdemu-core'` in that output is expected and correct.
+That core is AGPL and dev-only; nothing you build needs it, and CMake skips the
+dev-only `_oracle` targets automatically when it is absent.
+
 Builds natively on Windows (MSVC), macOS (Apple Silicon & Intel), and Linux.
 SDL2 is bundled on Windows; `brew install sdl2` on macOS; `libsdl2-dev` on Linux.
 
