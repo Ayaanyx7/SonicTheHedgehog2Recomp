@@ -184,7 +184,7 @@ Or manually from the segagenesisrecomp tree:
 
 ```cmd
 cd segagenesisrecomp\sonicthehedgehog2
-..\recompiler\build\Release\GenesisRecomp.exe sonic2.bin --game game.cfg --reverse-debug
+..\recompiler\build\Release\GenesisRecomp.exe sonic2.bin --game game.toml --reverse-debug
 ```
 
 The `--reverse-debug` flag enables `rdb_on_block` / `rdb_on_insn`
