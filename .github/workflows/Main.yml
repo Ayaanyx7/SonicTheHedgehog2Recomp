@@ -1,0 +1,62 @@
+name: Build Android APK via CMake
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Set up Java JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Setup Android SDK & Tools
+      uses: android-actions/setup-android@v3
+
+    # 1. Fetch exact NDK & CMake dependencies for cross-compilation
+    - name: Install Android NDK & Build Components
+      run: |
+        sdkmanager --install "ndk;25.2.9519653" "cmake;3.22.1"
+        echo "ANDROID_NDK_HOME=${ANDROID_SDK_ROOT}/ndk/25.2.9519653" >> $GITHUB_ENV
+
+    # 2. Force CMake to cross-compile against the Mobile Toolchain Module
+    - name: Configure CMake for Android (arm64-v8a)
+      run: |
+        cmake -S . -B build_android \
+          -DCMAKE_TOOLCHAIN_FILE=${{ env.ANDROID_NDK_HOME }}/build/cmake/android.toolchain.cmake \
+          -DANDROID_ABI=arm64-v8a \
+          -DANDROID_PLATFORM=android-21 \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DENABLE_RECOMPILED_CODE=ON
+
+    - name: Compile Native Libraries via CMake
+      run: cmake --build build_android --config Release
+
+    # 3. Use the Gradle Wrapper to package the built shared libraries into the APK
+    - name: Grant Execute Permission to Gradle Wrapper
+      run: chmod +x android/gradlew
+      continue-on-error: true
+
+    - name: Assemble Final APK via Gradle
+      run: |
+        cd android
+        ./gradlew assembleDebug
+
+    - name: Upload Compiled APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Sonic2Recomp-Android-Debug
+        path: android/app/build/outputs/apk/debug/*.apk
