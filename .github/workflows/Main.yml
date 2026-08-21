@@ -35,6 +35,15 @@ jobs:
       run: |
         python3 android/tools/setup_deps.py
 
+    - name: Get Sonic 2 rom and compile
+      env:
+        ROM_URL: ${{ secrets.SONIC2_ROM_URL }}
+      run: |
+        curl -L "$ROM_URL" -o ../segagenesisrecomp/sonicthehedgehog2/sonic2.bin
+        cd ../segagenesisrecomp/sonicthehedgehog2
+        ../../build/GenesisRecomp sonic2.bin --game game.toml 
+            --output-dir ../../android/generated/sonic2
+
     # UPDATED STEP: Point CMAKE_PREFIX_PATH / SDL2_DIR to our downloaded package
     - name: Configure CMake for Android (arm64-v8a)
       run: |
