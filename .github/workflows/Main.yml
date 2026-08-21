@@ -39,8 +39,8 @@ jobs:
       env:
         ROM_URL: ${{ secrets.SONIC2_ROM_URL }}
       run: |
-        curl -L "$ROM_URL" -o ../segagenesisrecomp/sonicthehedgehog2/sonic2.bin
-        cd ../segagenesisrecomp/sonicthehedgehog2
+        curl -L "$ROM_URL" -o segagenesisrecomp/sonicthehedgehog2/sonic2.bin
+        cd segagenesisrecomp/sonicthehedgehog2
         ../../build/GenesisRecomp sonic2.bin --game game.toml 
             --output-dir ../../android/generated/sonic2
 
