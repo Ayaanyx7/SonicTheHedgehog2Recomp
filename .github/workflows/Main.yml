@@ -52,6 +52,9 @@ jobs:
         # 4. Navigate into the game directory
         cd segagenesisrecomp/sonicthehedgehog2
         
+        # 4.5. funny creation thingy
+        mkdir -p ../../android/generated/sonic2
+        
         # 5. Execute the freshly built compiler
         ../../build/GenesisRecomp sonic2.bin --game game.toml --output-dir ../../android/generated/sonic2
 
