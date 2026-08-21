@@ -31,6 +31,10 @@ jobs:
         sdkmanager --install "ndk;25.2.9519653" "cmake;3.22.1"
         echo "ANDROID_NDK_HOME=${ANDROID_SDK_ROOT}/ndk/25.2.9519653" >> $GITHUB_ENV
 
+    - name: Setup Android dependencies
+      run: |
+        python3 android/tools/setup_deps.py
+
     # UPDATED STEP: Point CMAKE_PREFIX_PATH / SDL2_DIR to our downloaded package
     - name: Configure CMake for Android (arm64-v8a)
       run: |
