@@ -34,8 +34,8 @@ jobs:
     # NEW STEP: Fetch pre-compiled Android SDL2 development libraries
     - name: Fetch and Setup SDL2 for Android
       run: |
-        curl -L https://github.com/libsdl-org/SDL/releases/download/release-2.28.5/SDL2-2.28.5.tar.gz -o sdl2.android.tar.gz
-        tar -xzf sdl2-android.tar.gz
+        curl -L https://github.com/libsdl-org/SDL/releases/download/release-2.28.5/SDL2-2.28.5.tar.gz -o SDL2.tar.gz
+        tar -xzf SDL2.tar.gz
         # Create an absolute environment variable pointing to the extracted folder
         echo "SDL2_ANDROID_DIR=${{ github.workspace }}/SDL2-2.28.5" >> $GITHUB_ENV
 
