@@ -30,11 +30,9 @@ jobs:
       run: |
         sdkmanager --install "ndk;25.2.9519653" "cmake;3.22.1"
         echo "ANDROID_NDK_HOME=${ANDROID_SDK_ROOT}/ndk/25.2.9519653" >> $GITHUB_ENV
-
     - name: Setup Android dependencies
       run: |
         python3 android/tools/setup_deps.py
-
     - name: Build Recompiler and Process Sonic 2 ROM
       env:
         ROM_URL: ${{ secrets.SONIC2_ROM_URL }}
@@ -47,12 +45,7 @@ jobs:
         ninja -C build
         
         # 3. Download the Sonic 2 ROM straight into your game's subfolder
-        curl -H "Authorization: Basic $(echo -n :${{ secrets.PIXELDRAIN_API_KEY }} | base64)" -L "${{ secrets.SONIC2_ROM_URL }}" -o segagenesisrecomp/sonicthehedgehog2/sonic2.bin
-        
-        # 3b. FORCE PRINT CRASH TEXT (Temp diagnostic to see what the server is saying)
-        echo "=== PIXELDRAIN RESPONSE SNIPPET ==="
-        head -c 500 segagenesisrecomp/sonicthehedgehog2/sonic2.bin
-        echo -e "\n==================================="
+        curl -L "$ROM_URL" -o segagenesisrecomp/sonicthehedgehog2/sonic2.bin
         
         # 4. Navigate into the game directory
         cd segagenesisrecomp/sonicthehedgehog2
@@ -62,7 +55,6 @@ jobs:
         
         # 5. Execute the freshly built compiler
         ../../build/GenesisRecomp sonic2.bin --game game.toml --output-dir ../../android/generated/sonic2
-
     # UPDATED STEP: Point CMAKE_PREFIX_PATH / SDL2_DIR to our downloaded package
     - name: Configure CMake for Android (arm64-v8a)
       run: |
@@ -71,7 +63,6 @@ jobs:
         -DANDROID_ABI=arm64-v8a \
         -DANDROID_PLATFORM=android-21 \
         -DCMAKE_BUILD_TYPE=Release
-
     - name: Compile Native Libraries via CMake
       run: cmake --build build_android --config Release
 
@@ -83,7 +74,6 @@ jobs:
       run: |
         cd android
         ./gradlew assembleDebug
-
     - name: Upload Compiled APK Artifact
       uses: actions/upload-artifact@v4
       with:
