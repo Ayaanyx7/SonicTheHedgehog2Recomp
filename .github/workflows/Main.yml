@@ -47,7 +47,7 @@ jobs:
         ninja -C build
         
         # 3. Download the Sonic 2 ROM straight into your game's subfolder
-        curl -L "$ROM_URL" -o segagenesisrecomp/sonicthehedgehog2/sonic2.bin
+        curl -u ":${{ secrets.PIXELDRAIN_API_KEY }}" -L "$ROM_URL" -o segagenesisrecomp/sonicthehedgehog2/sonic2.bin
         
         # 4. Navigate into the game directory
         cd segagenesisrecomp/sonicthehedgehog2
